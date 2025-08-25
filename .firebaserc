@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "attendance-management-3f5f5",
+    "attendance-app": "attendance-management-3f5f5"
+  },
+  "targets": {},
+  "etags": {}
+}

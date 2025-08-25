@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CheckMate</title>
+
+  <!-- Multiple Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="nav">
+    <div class="brand">
+      <span class="logo-badge">CM</span>
+      <h1>CheckMate</h1>
+    </div>
+    <nav class="nav-links">
+      <a data-nav="dashboard" class="active">Dashboard</a>
+      <a data-nav="classes">Classes</a>
+      <a data-nav="students">Students</a>
+      <a data-nav="attendance">Attendance</a>
+      <a data-nav="reports">Reports</a>
+      <a data-nav="timetable">Timetable</a>
+      <a data-nav="holidays">Holidays</a>
+    </nav>
+    <div class="nav-cta">
+      <span id="userRoleBadge" class="badge">Guest</span>
+      <button id="loginBtn" class="btn ghost">Login</button>
+      <button id="logoutBtn" class="btn danger hidden">Logout</button>
+      <button id="notifyBtn" class="btn subtle hidden" title="Enable Notifications">🔔</button>
+    </div>
+    <button id="hamburger" class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </header>
+
+  <main id="app">
+    <!-- Auth Section -->
+    <section id="authSection" class="card center">
+      <h2>Welcome to CheckMate ✌️✅</h2>
+      <p class="muted">Track your records and stay updated!</p>
+      <form id="authForm" class="grid">
+        <input id="authName" type="text" placeholder="Full name (for signup)" />
+        <input id="authEmail" type="email" placeholder="Email" required />
+        <input id="authPassword" type="password" placeholder="Password" required />
+        <select id="authRole">
+          <option value="student">Student</option>
+          <option value="parent">Parent</option>
+          <option value="teacher">Teacher</option>
+          <option value="admin">Admin</option>
+        </select>
+        <div class="row">
+          <button id="signup" type="button" class="btn">Sign up</button>
+          <button id="login" type="submit" class="btn ghost">Login</button>
+        </div>
+      </form>
+      <div class="hint">Tip: Only Admins/Teachers can edit data. Others are read-only.</div>
+    </section>
+
+    <!-- Dashboard -->
+    <section id="dashboardSection" class="hidden">
+      <div class="cards">
+        <div class="stat-card">
+          <div class="stat-value" id="statPresent">0</div>
+          <div class="stat-label">Present Today</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statAbsent">0</div>
+          <div class="stat-label">Absent Today</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statClasses">0</div>
+          <div class="stat-label">Classes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statStudents">0</div>
+          <div class="stat-label">Students</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Today: <span id="todayLabel"></span></h3>
+        <p class="muted">Real-time updates — no refresh needed.</p>
+        <div id="todaySummary" class="pill-row"></div>
+      </div>
+    </section>
+
+    <!-- Classes -->
+    <section id="classesSection" class="hidden">
+      <div class="section-header">
+        <h3>Classes</h3>
+        <button id="addClassBtn" class="btn">+ Add Class</button>
+      </div>
+      <div class="table">
+        <div class="t-head">
+          <div>Name</div><div>Code</div><div>Department</div><div>Capacity</div><div>Actions</div>
+        </div>
+        <div id="classesBody" class="t-body"></div>
+      </div>
+    </section>
+
+    <!-- Students -->
+    <section id="studentsSection" class="hidden">
+      <div class="section-header">
+        <h3>Students</h3>
+        <button id="addStudentBtn" class="btn">+ Add Student</button>
+      </div>
+      <div class="table">
+        <div class="t-head">
+          <div>Name</div><div>Roll/ID</div><div>Class</div><div>Department</div><div>Contact</div><div>Actions</div>
+        </div>
+        <div id="studentsBody" class="t-body"></div>
+      </div>
+    </section>
+
+    <!-- Attendance -->
+    <section id="attendanceSection" class="hidden">
+      <div class="section-header">
+        <h3>Mark Attendance</h3>
+        <div class="row">
+          <input id="attDate" type="date"/>
+          <select id="attClass"></select>
+        </div>
+      </div>
+      <div id="attendanceList" class="list"></div>
+      <div class="row end">
+        <button id="saveAttendanceBtn" class="btn">Save</button>
+      </div>
+    </section>
+
+    <!-- Reports -->
+    <section id="reportsSection" class="hidden">
+      <h3>Reports</h3>
+      <div class="row">
+        <select id="reportClass"></select>
+        <select id="reportRange">
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="monthly">Monthly</option>
+        </select>
+        <input id="reportDate" type="date"/>
+        <button id="runReport" class="btn ghost">Run</button>
+      </div>
+      <div id="reportResults" class="cards"></div>
+    </section>
+
+    <!-- Timetable -->
+    <section id="timetableSection" class="hidden">
+      <div class="section-header">
+        <h3>Weekly Timetable</h3>
+        <select id="ttClass"></select>
+      </div>
+      <div id="timetableGrid" class="tt-grid"></div>
+      <div class="row end">
+        <button id="saveTimetableBtn" class="btn">Save Timetable</button>
+      </div>
+    </section>
+
+    <!-- Holidays -->
+    <section id="holidaysSection" class="hidden">
+      <div class="section-header">
+        <h3>Holidays</h3>
+        <div class="row">
+          <input id="holidayDate" type="date"/>
+          <input id="holidayLabel" type="text" placeholder="Holiday label"/>
+          <button id="addHolidayBtn" class="btn">Add Holiday</button>
+        </div>
+      </div>
+      <div id="holidayList" class="list"></div>
+    </section>
+  </main>
+
+  <!-- Modals -->
+  <div id="modalOverlay" class="modal-overlay hidden"></div>
+  
+  <!-- Student Modal -->
+  <div id="studentModal" class="modal hidden">
+    <h3 id="studentModalTitle">Add Student</h3>
+    <div class="grid">
+      <input id="sName" placeholder="Name"/>
+      <input id="sRoll" placeholder="Roll/ID"/>
+      <input id="sDepartment" placeholder="Department"/>
+      <select id="sClass">
+        <option value="">Select Class</option>
+      </select>
+      <input id="sPhone" placeholder="Parent Phone"/>
+      <input id="sEmail" placeholder="Parent Email"/>
+    </div>
+    <div class="row end">
+      <button id="cancelStudent" class="btn ghost">Cancel</button>
+      <button id="saveStudent" class="btn">Save</button>
+    </div>
+  </div>
+
+  <!-- Class Modal -->
+  <div id="classModal" class="modal hidden">
+    <h3 id="classModalTitle">Add Class</h3>
+    <div class="grid">
+      <input id="cName" placeholder="Class Name"/>
+      <input id="cCode" placeholder="Class Code"/>
+      <input id="cDepartment" placeholder="Department"/>
+      <input id="cCapacity" type="number" placeholder="Capacity"/>
+    </div>
+    <div class="row end">
+      <button id="cancelClass" class="btn ghost">Cancel</button>
+      <button id="saveClass" class="btn">Save</button>
+    </div>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script type="module" src="script.js"></script>
+</body>
+</html>
