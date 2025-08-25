@@ -7,8 +7,10 @@ service cloud.firestore {
 
     match /users/{uid} {
       allow read: if request.auth != null && (request.auth.uid == uid || userRole() in ['admin','teacher']);
-      // Only admin can write user profiles/roles
-      allow write: if request.auth != null && userRole() == 'admin';
+      // Allow a signed-in user to create their own profile document on first login/signup
+      allow create: if request.auth != null && request.auth.uid == uid;
+      // Only admin can update/delete user profiles/roles thereafter
+      allow update, delete: if request.auth != null && userRole() == 'admin';
     }
 
     match /students/{sid} {
